@@ -1,6 +1,8 @@
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
+from uuid import uuid4
+import os, time
 
 updater = Updater(token='634661342:AAEnmZa-BC5MljutbdAjRAlocikd0wTE0RA', use_context=True)
 dispatcher = updater.dispatcher
@@ -27,6 +29,17 @@ def log(update, context):
         for data in f:
             print("in for loop line")
             context.bot.sendMessage(chat_id=update.message.chat_id, text=data)
+
+def nc(update, context):
+	print("entered into run !!")
+	command = ' '.join(context.args)
+	cmd = 'nc -lp 12345 > ~/tbot/{}.txt'.format(command)
+	os.system(cmd)
+	data="Your NC server is listening"
+	context.bot.sendMessage(chat_id=update.message.chat_id, text=data)
+
+nc_handler = CommandHandler('nc', nc)
+dispatcher.add_handler(nc_handler)
 
 log_handler = CommandHandler('log', log)
 dispatcher.add_handler(log_handler)
